@@ -12,7 +12,11 @@ import torch
 from transformers import AutoImageProcessor
 from vllm.engine.arg_utils import AsyncEngineArgs
 
-import dynamo.nixl_connect as connect
+try:
+    import dynamo.nixl_connect as connect
+except ImportError:
+    connect = None
+
 from dynamo.common.multimodal import (
     LocalEmbeddingSender,
     NixlReadEmbeddingSender,
