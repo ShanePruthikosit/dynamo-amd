@@ -20,6 +20,7 @@ try:
 except ImportError:
     nixl_agent = None
     nixl_agent_config = None
+from pydantic import BaseModel
 from safetensors import torch as safetensors_torch
 
 try:
