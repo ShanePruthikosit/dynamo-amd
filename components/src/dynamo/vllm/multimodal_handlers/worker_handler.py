@@ -5,7 +5,11 @@ import logging
 
 from vllm.inputs.data import TokensPrompt
 
-import dynamo.nixl_connect as connect
+try:
+    import dynamo.nixl_connect as connect
+except ImportError:
+    connect = None
+    
 from dynamo.common.utils import nvtx_utils as _nvtx
 from dynamo.common.utils.otel_tracing import build_trace_headers
 from dynamo.common.utils.time_section import time_and_log_code_section
