@@ -15,11 +15,17 @@ from typing import Any, Awaitable, List, Optional
 
 import msgpack
 import torch
-from nixl._api import nixl_agent, nixl_agent_config
-from pydantic import BaseModel
+try:
+    from nixl._api import nixl_agent, nixl_agent_config
+except ImportError:
+    nixl_agent = None
+    nixl_agent_config = None
 from safetensors import torch as safetensors_torch
 
-import dynamo.nixl_connect as nixl_connect
+try:
+    import dynamo.nixl_connect as nixl_connect
+except ImportError:
+    nixl_connect = None
 from dynamo.common.utils import nvtx_utils as _nvtx
 from dynamo.common.utils.runtime import run_async
 
