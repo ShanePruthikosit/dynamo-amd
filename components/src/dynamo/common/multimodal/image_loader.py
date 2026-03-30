@@ -25,10 +25,14 @@ from urllib.parse import urlparse
 import httpx
 from PIL import Image
 
-import dynamo.nixl_connect as nixl_connect
 from dynamo.common.utils import nvtx_utils as _nvtx
-from dynamo.common.utils.media_nixl import read_decoded_media_via_nixl
 from dynamo.common.utils.runtime import run_async
+try:
+    import dynamo.nixl_connect as nixl_connect
+    from dynamo.common.utils.media_nixl import read_decoded_media_via_nixl
+except ImportError:
+    nixl_connect = None
+    read_decoded_media_via_nixl = None
 
 from .http_client import get_http_client
 
@@ -69,9 +73,14 @@ class ImageLoader:
         # Lazy-init NIXL connector only when frontend decoding is enabled
         self._nixl_connector = None
         if self._enable_frontend_decoding:
+            if nixl_connect is None:
+                raise RuntimeError(
+                    "--frontend-decoding requires nixl to be installed"
+                )
             self._nixl_connector = nixl_connect.Connector()
             run_async(
                 self._nixl_connector.initialize
+
             )  # Synchronously wait for async init
 
     @_nvtx.annotate("mm:img:load_image", color="lime")
